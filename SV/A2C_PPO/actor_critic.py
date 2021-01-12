@@ -12,6 +12,8 @@ class ActorCriticAgentWithPPO:
         self.actor = Network(in_dim=state_size, out_dim=action_size)
         self.critic = Network(in_dim=state_size, out_dim=1)
 
+        self.try_loading_existing_model_weights()
+
         self.actor_optim = Adam(self.actor.parameters(), lr=self.actor_lr)
         self.critic_optim = Adam(self.actor.parameters(), lr=self.critic_lr)
 
@@ -20,6 +22,13 @@ class ActorCriticAgentWithPPO:
 
         self.actor_loss_log = []
         self.critic_loss_log = []
+
+    def try_loading_existing_model_weights(self):
+        try:
+            self.actor.load_state_dict(os.getcwd()+'/actor.pth')
+            self.critic.load_state_dict(os.getcwd()+'/critic.pth')
+        except:
+            print("Training Actor-Critic from scratch!")
 
     def init_hyperparams(self, hyperparams):
         self.actor_lr = hyperparams['actor_lr']
