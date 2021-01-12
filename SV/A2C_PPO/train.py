@@ -180,3 +180,8 @@ if __name__ == '__main__':
 
     generate_and_save_plot(A2C_agent.actor_loss_log, 'actor_loss.png')
     generate_and_save_plot(A2C_agent.critic_loss_log, 'critic_loss.png')
+
+    ## save models
+    torch.save(A2C_agent.actor.state_dict(), os.getcwd()+'/actor.pth')
+    torch.save(A2C_agent.critic.state_dict(), os.getcwd()+'/critic.pth')
+    
