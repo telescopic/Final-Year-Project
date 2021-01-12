@@ -1,0 +1,55 @@
+2021-01-09 11:19:41,241 INFO    MainThread:20168 [wandb_setup.py:_flush():68] setting env: {}
+2021-01-09 11:19:41,241 INFO    MainThread:20168 [wandb_setup.py:_flush():68] multiprocessing start_methods=spawn
+2021-01-09 11:19:41,241 INFO    MainThread:20168 [wandb_setup.py:_flush():68] setting login settings: {}
+2021-01-09 11:19:41,241 INFO    MainThread:20168 [wandb_init.py:_log_setup():301] Logging user logs to wandb\run-20210109_111941-3luvf8lm\logs\debug.log
+2021-01-09 11:19:41,242 INFO    MainThread:20168 [wandb_init.py:_log_setup():302] Logging internal logs to wandb\run-20210109_111941-3luvf8lm\logs\debug-internal.log
+2021-01-09 11:19:43,970 INFO    MainThread:20168 [wandb_run.py:_console_start():1322] atexit reg
+2021-01-09 11:19:43,974 INFO    MainThread:20168 [wandb_run.py:_redirect():1192] redirect: SettingsConsole.WRAP
+2021-01-09 11:19:43,974 INFO    MainThread:20168 [wandb_run.py:_redirect():1223] Wrapping output streams.
+2021-01-09 11:19:43,974 INFO    MainThread:20168 [wandb_run.py:_redirect():1239] Redirects installed.
+2021-01-09 11:19:46,743 INFO    MainThread:20168 [wandb_run.py:_atexit_cleanup():1295] got exitcode: 1
+2021-01-09 11:19:46,744 INFO    MainThread:20168 [wandb_run.py:_restore():1267] restore
+2021-01-09 11:19:46,763 INFO    MainThread:20168 [wandb_run.py:_wait_for_finish():1409] got exit ret: uuid: "9024b95916d84ceaa743ab5860a0acf7"
+response {
+  poll_exit_response {
+    file_counts {
+      wandb_count: 1
+    }
+    pusher_stats {
+      uploaded_bytes: 779
+      total_bytes: 779
+    }
+  }
+}
+
+2021-01-09 11:19:49,040 INFO    MainThread:20168 [wandb_run.py:_wait_for_finish():1409] got exit ret: uuid: "956509408ffa415a94a269afe656b0f8"
+response {
+  poll_exit_response {
+    file_counts {
+      wandb_count: 5
+    }
+    pusher_stats {
+      uploaded_bytes: 3935
+      total_bytes: 3935
+    }
+  }
+}
+
+2021-01-09 11:19:51,055 INFO    MainThread:20168 [wandb_run.py:_wait_for_finish():1409] got exit ret: uuid: "d438f33b542f40b18ba56cae9d28203b"
+response {
+  poll_exit_response {
+    done: true
+    exit_result {
+    }
+    file_counts {
+      wandb_count: 5
+    }
+    pusher_stats {
+      uploaded_bytes: 3935
+      total_bytes: 3935
+    }
+  }
+}
+
+2021-01-09 11:19:52,225 INFO    MainThread:20168 [wandb_run.py:_show_files():1618] logging synced files
+2021-01-09 11:19:52,240 INFO    MainThread:20168 [internal.py:handle_exit():138] Internal process exited

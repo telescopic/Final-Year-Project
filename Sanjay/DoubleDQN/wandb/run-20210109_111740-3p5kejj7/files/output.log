@@ -1,0 +1,7 @@
+DEPRECATED - RailEnv arg: malfunction_and_process_data - use malfunction_generator
+Traceback (most recent call last):
+  File "train.py", line 121, in <module>
+    actions = get_actions(obs, env_params['n_agents'], info)
+  File "train.py", line 83, in get_actions
+    normalized_obs = normalize_observation(obs[0])
+TypeError: normalize_observation() missing 1 required positional argument: 'tree_depth'
