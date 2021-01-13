@@ -24,14 +24,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 import os
 
+import wandb
 
-def generate_and_save_plot(y_data, filename):
-    plt.plot(y_data)
-    plt.savefig(filename)
-    plt.show()
-    print("Saving file: " + os.getcwd() + "/" + filename)
-    plt.close()
-
+wandb.init(project='flatland', name='a2c-ppo-run-1')
 
 if __name__ == '__main__':
     # Environment parameters
@@ -43,7 +38,7 @@ if __name__ == '__main__':
     max_rails_between_cities = 2
     max_rails_in_city = 3
     seed = 42
-    negative_inf = -1000
+
     # Observation parameters
     observation_tree_depth = 2
     observation_radius = 10
@@ -103,7 +98,7 @@ if __name__ == '__main__':
     step_size = 100  # to print progress
 
     ### CHANGE THIS VARIABLE
-    num_episodes = 1
+    num_episodes = 10
 
     hyperparams = {
         'actor_lr': 0.005,
@@ -134,6 +129,7 @@ if __name__ == '__main__':
         actions_list = [[] for i in range(n_agents)]
         log_prob_list = [[] for i in range(n_agents)]
         rewards_list = [[] for i in range(n_agents)]
+        tot_rewards = 0
 
         for i in range(max_steps):
             if i % step_size == 0:
@@ -161,27 +157,34 @@ if __name__ == '__main__':
 
             next_obs, all_rewards, done, info = env.step(action_dict)
 
-            obs = next_obs
-
             for agent in env.get_agent_handles():
                 if obs[agent]:
+                    tot_rewards += all_rewards[agent]
                     rewards_list[agent].append(all_rewards[agent])
+
+            obs = next_obs
+
+        avg_rewards = tot_rewards / n_agents
+        wandb.log({'mean_rewards': avg_rewards})
 
         for agent in env.get_agent_handles():
             rewards_list[agent] = A2C_agent.compute_discounted_rewards(
                 rewards_list[agent])
 
         #print(rewards_list)
+        tot_actor_loss = 0
+        tot_critic_loss = 0
         for agent in env.get_agent_handles():
             A2C_agent.learn(obs_list[agent], actions_list[agent],
                             log_prob_list[agent], rewards_list[agent])
+            tot_actor_loss += A2C_agent.avg_actor_loss
+            tot_critic_loss += A2C_agent.avg_critic_loss
+
+        wandb.log({'actor_loss': tot_actor_loss, 'critic_loss': tot_critic_loss})
 
         print(flush=True)
 
-    generate_and_save_plot(A2C_agent.actor_loss_log, 'actor_loss.png')
-    generate_and_save_plot(A2C_agent.critic_loss_log, 'critic_loss.png')
-
     ## save models
-    torch.save(A2C_agent.actor.state_dict(), os.getcwd()+'/actor.pth')
-    torch.save(A2C_agent.critic.state_dict(), os.getcwd()+'/critic.pth')
-    
+    print("Actor and Critic weights saved")
+    torch.save(A2C_agent.actor.state_dict(), os.getcwd() + '/actor.pth')
+    torch.save(A2C_agent.critic.state_dict(), os.getcwd() + '/critic.pth')
