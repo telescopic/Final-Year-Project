@@ -16,7 +16,7 @@ class ActorCriticAgentWithPPO:
         self.try_loading_existing_model_weights()
 
         self.actor_optim = Adam(self.actor.parameters(), lr=self.actor_lr)
-        self.critic_optim = Adam(self.actor.parameters(), lr=self.critic_lr)
+        self.critic_optim = Adam(self.critic.parameters(), lr=self.critic_lr)
 
         self.cov_var = torch.full(size=(action_size, ), fill_value=0.5)
         self.cov_mat = torch.diag(self.cov_var)
