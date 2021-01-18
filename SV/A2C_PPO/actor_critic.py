@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.optim import Adam
+import os
 from torch.distributions import MultivariateNormal, Categorical
 
 
@@ -15,19 +16,20 @@ class ActorCriticAgentWithPPO:
         self.try_loading_existing_model_weights()
 
         self.actor_optim = Adam(self.actor.parameters(), lr=self.actor_lr)
-        self.critic_optim = Adam(self.actor.parameters(), lr=self.critic_lr)
+        self.critic_optim = Adam(self.critic.parameters(), lr=self.critic_lr)
 
         self.cov_var = torch.full(size=(action_size, ), fill_value=0.5)
         self.cov_mat = torch.diag(self.cov_var)
 
-        self.actor_loss_log = []
-        self.critic_loss_log = []
+        self.avg_actor_loss = 0
+        self.avg_critic_loss = 0
 
     def try_loading_existing_model_weights(self):
         try:
             self.actor.load_state_dict(os.getcwd()+'/actor.pth')
             self.critic.load_state_dict(os.getcwd()+'/critic.pth')
-        except:
+            print("Using pre-trained weights")
+        except(Exception):
             print("Training Actor-Critic from scratch!")
 
     def init_hyperparams(self, hyperparams):
@@ -77,6 +79,9 @@ class ActorCriticAgentWithPPO:
         batch_log_probs = torch.Tensor(batch_log_probs)
         batch_rewards = torch.Tensor(batch_log_probs)
 
+        self.avg_actor_loss = 0
+        self.avg_critic_loss = 0
+
         V, _ = self.evaluate(batch_obs, batch_actions)
 
         A_k = batch_rewards - V.detach()
@@ -92,12 +97,14 @@ class ActorCriticAgentWithPPO:
             surr2 = torch.clamp(ratios, 1 - self.clip, 1 + self.clip) * A_k
 
             actor_loss = (-torch.min(surr1, surr2)).mean()
-            self.actor_loss_log.append(actor_loss)
+            self.avg_actor_loss += actor_loss
+            #self.actor_loss_log.append(actor_loss)
 
             V = V.view(-1, 1)
 
             critic_loss = nn.MSELoss()(V, batch_rewards)
-            self.critic_loss_log.append(critic_loss)
+            self.avg_critic_loss += critic_loss
+            #self.critic_loss_log.append(critic_loss)
 
             self.actor_optim.zero_grad()
             actor_loss.backward(retain_graph=True)
@@ -106,3 +113,6 @@ class ActorCriticAgentWithPPO:
             self.critic_optim.zero_grad()
             critic_loss.backward()
             self.critic_optim.step()
+
+        self.avg_actor_loss /= self.num_updates
+        self.avg_critic_loss /= self.num_updates
