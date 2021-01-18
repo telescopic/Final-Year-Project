@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "train.py", line 67, in <module>
+    agent = Model(state_size, action_size)
+TypeError: __init__() missing 5 required positional arguments: 'lr', 'n_actions', 'input_dims', 'mem_size', and 'batch_size'

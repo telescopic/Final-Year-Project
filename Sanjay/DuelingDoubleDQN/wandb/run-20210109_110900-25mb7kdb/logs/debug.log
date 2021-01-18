@@ -1,0 +1,49 @@
+2021-01-09 11:09:00,853 INFO    MainThread:5972 [wandb_setup.py:_flush():68] setting env: {}
+2021-01-09 11:09:00,854 INFO    MainThread:5972 [wandb_setup.py:_flush():68] multiprocessing start_methods=spawn
+2021-01-09 11:09:00,854 INFO    MainThread:5972 [wandb_setup.py:_flush():68] setting login settings: {}
+2021-01-09 11:09:00,854 INFO    MainThread:5972 [wandb_init.py:_log_setup():301] Logging user logs to wandb\run-20210109_110900-25mb7kdb\logs\debug.log
+2021-01-09 11:09:00,854 INFO    MainThread:5972 [wandb_init.py:_log_setup():302] Logging internal logs to wandb\run-20210109_110900-25mb7kdb\logs\debug-internal.log
+2021-01-09 11:09:08,964 INFO    MainThread:5972 [wandb_run.py:_console_start():1322] atexit reg
+2021-01-09 11:09:08,974 INFO    MainThread:5972 [wandb_run.py:_redirect():1192] redirect: SettingsConsole.WRAP
+2021-01-09 11:09:08,976 INFO    MainThread:5972 [wandb_run.py:_redirect():1223] Wrapping output streams.
+2021-01-09 11:09:08,976 INFO    MainThread:5972 [wandb_run.py:_redirect():1239] Redirects installed.
+2021-01-09 11:09:09,040 INFO    MainThread:5972 [wandb_run.py:_atexit_cleanup():1295] got exitcode: 1
+2021-01-09 11:09:09,042 INFO    MainThread:5972 [wandb_run.py:_restore():1267] restore
+2021-01-09 11:09:09,374 INFO    MainThread:5972 [wandb_run.py:_wait_for_finish():1409] got exit ret: uuid: "dd47a598e7ad4a9fbbd0191101b09592"
+response {
+  poll_exit_response {
+    file_counts {
+      wandb_count: 1
+    }
+    pusher_stats {
+      total_bytes: 779
+    }
+  }
+}
+
+2021-01-09 11:09:11,392 INFO    MainThread:5972 [wandb_run.py:_wait_for_finish():1409] got exit ret: uuid: "2a25e4d2e29f4384b776c21f321aa2c1"
+response {
+  poll_exit_response {
+    file_counts {
+      wandb_count: 5
+    }
+    pusher_stats {
+      uploaded_bytes: 3365
+      total_bytes: 3713
+    }
+  }
+}
+
+2021-01-09 11:09:13,412 INFO    MainThread:5972 [wandb_run.py:_wait_for_finish():1409] got exit ret: uuid: "ab0c7937c3a642688c1020e7daeea3ad"
+response {
+  poll_exit_response {
+    file_counts {
+      wandb_count: 5
+    }
+    pusher_stats {
+      uploaded_bytes: 3713
+      total_bytes: 3713
+    }
+  }
+}
+

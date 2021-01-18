@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "train.py", line 72, in <module>
+    n_actions=n_actions, mem_size=25000,
+NameError: name 'n_actions' is not defined
