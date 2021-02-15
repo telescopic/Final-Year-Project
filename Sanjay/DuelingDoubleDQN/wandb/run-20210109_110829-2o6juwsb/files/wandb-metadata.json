@@ -1,0 +1,22 @@
+{
+    "os": "Windows-10-10.0.19041-SP0",
+    "python": "3.6.10",
+    "heartbeatAt": "2021-01-09T05:38:32.956883",
+    "startedAt": "2021-01-09T05:38:29.175951",
+    "docker": null,
+    "cpu_count": 12,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "codePath": "Sanjay\\DQN\\train.py",
+    "program": "train.py",
+    "git": {
+        "remote": "https://github.com/telescopic/Final-Year-Project.git",
+        "commit": "118b7f77533b643e257e34028aa97b136a12fe89"
+    },
+    "email": "sanjay.pokkali99@gmail.com",
+    "root": "C:/Users/sanja/Desktop/College/8th Semester/Final Year Project/Codebase/Final-Year-Project-GIT",
+    "host": "SanjayP",
+    "username": "sanja",
+    "executable": "C:\\Users\\sanja\\Anaconda3\\envs\\gym\\python.exe"
+}

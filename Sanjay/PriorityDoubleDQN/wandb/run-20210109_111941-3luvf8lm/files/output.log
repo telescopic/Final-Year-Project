@@ -1,0 +1,10 @@
+DEPRECATED - RailEnv arg: malfunction_and_process_data - use malfunction_generator
+Traceback (most recent call last):
+  File "train.py", line 123, in <module>
+    score += np.mean(all_rewards)
+  File "<__array_function__ internals>", line 6, in mean
+  File "C:\Users\sanja\Anaconda3\envs\gym\lib\site-packages\numpy\core\fromnumeric.py", line 3335, in mean
+    out=out, **kwargs)
+  File "C:\Users\sanja\Anaconda3\envs\gym\lib\site-packages\numpy\core\_methods.py", line 163, in _mean
+    ret = ret / rcount
+TypeError: unsupported operand type(s) for /: 'dict' and 'int'

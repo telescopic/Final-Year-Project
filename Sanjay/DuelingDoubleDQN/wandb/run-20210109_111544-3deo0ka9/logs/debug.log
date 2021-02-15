@@ -1,0 +1,41 @@
+2021-01-09 11:15:44,438 INFO    MainThread:13996 [wandb_setup.py:_flush():68] setting env: {}
+2021-01-09 11:15:44,439 INFO    MainThread:13996 [wandb_setup.py:_flush():68] multiprocessing start_methods=spawn
+2021-01-09 11:15:44,439 INFO    MainThread:13996 [wandb_setup.py:_flush():68] setting login settings: {}
+2021-01-09 11:15:44,439 INFO    MainThread:13996 [wandb_init.py:_log_setup():301] Logging user logs to wandb\run-20210109_111544-3deo0ka9\logs\debug.log
+2021-01-09 11:15:44,439 INFO    MainThread:13996 [wandb_init.py:_log_setup():302] Logging internal logs to wandb\run-20210109_111544-3deo0ka9\logs\debug-internal.log
+2021-01-09 11:15:46,932 INFO    MainThread:13996 [wandb_run.py:_console_start():1322] atexit reg
+2021-01-09 11:15:46,936 INFO    MainThread:13996 [wandb_run.py:_redirect():1192] redirect: SettingsConsole.WRAP
+2021-01-09 11:15:46,937 INFO    MainThread:13996 [wandb_run.py:_redirect():1223] Wrapping output streams.
+2021-01-09 11:15:46,937 INFO    MainThread:13996 [wandb_run.py:_redirect():1239] Redirects installed.
+2021-01-09 11:15:46,946 INFO    MainThread:13996 [wandb_run.py:_atexit_cleanup():1295] got exitcode: 1
+2021-01-09 11:15:46,946 INFO    MainThread:13996 [wandb_run.py:_restore():1267] restore
+2021-01-09 11:15:47,332 INFO    MainThread:13996 [wandb_run.py:_wait_for_finish():1409] got exit ret: uuid: "1750bf8ac0b548e3a9582a9d2dc2189b"
+response {
+  poll_exit_response {
+    file_counts {
+      wandb_count: 1
+    }
+    pusher_stats {
+      total_bytes: 779
+    }
+  }
+}
+
+2021-01-09 11:15:49,339 INFO    MainThread:13996 [wandb_run.py:_wait_for_finish():1409] got exit ret: uuid: "6c37ef5ed86446978244bd1cbe5e2781"
+response {
+  poll_exit_response {
+    done: true
+    exit_result {
+    }
+    file_counts {
+      wandb_count: 5
+    }
+    pusher_stats {
+      uploaded_bytes: 3708
+      total_bytes: 3708
+    }
+  }
+}
+
+2021-01-09 11:15:50,518 INFO    MainThread:13996 [wandb_run.py:_show_files():1618] logging synced files
+2021-01-09 11:15:50,534 INFO    MainThread:13996 [internal.py:handle_exit():138] Internal process exited

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "train.py", line 75, in <module>
+    env_name='Flatland')
+  File "C:\Users\sanja\Desktop\College\8th Semester\Final Year Project\Codebase\Final-Year-Project-GIT\Sanjay\DQN\agents\agent.py", line 30, in __init__
+    name = self.env_name+"_"+self.algo+"_q_eval",
+AttributeError: 'Model' object has no attribute 'env_name'

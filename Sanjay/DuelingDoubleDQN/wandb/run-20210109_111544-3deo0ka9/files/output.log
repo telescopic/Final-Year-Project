@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "train.py", line 75, in <module>
+    env_name='Flatland')
+  File "C:\Users\sanja\Desktop\College\8th Semester\Final Year Project\Codebase\Final-Year-Project-GIT\Sanjay\DQN\agents\agent.py", line 31, in __init__
+    chkpt_dir=self.chkpt_dir)
+AttributeError: 'Model' object has no attribute 'chkpt_dir'
