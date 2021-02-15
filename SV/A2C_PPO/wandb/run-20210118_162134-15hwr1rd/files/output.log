@@ -1,0 +1,322 @@
+Using StandardTreeObs
+DEPRECATED - RailEnv arg: malfunction_and_process_data - use malfunction_generator
+D:\lib\site-packages\flatland\envs\rail_generators.py:781: UserWarning: Could not set all required cities!
+  "Could not set all required cities!")
+Training Actor-Critic from scratch!
+Episode: 0
+D:\lib\site-packages\flatland\envs\rail_generators.py:703: UserWarning: [WARNING] Changing to Grid mode to place at least 2 cities.
+  warnings.warn("[WARNING] Changing to Grid mode to place at least 2 cities.")
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([322])) that is different to the input size (torch.Size([322, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([191])) that is different to the input size (torch.Size([191, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([406])) that is different to the input size (torch.Size([406, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 1
+D:\lib\site-packages\flatland\envs\rail_generators.py:781: UserWarning: Could not set all required cities!
+  "Could not set all required cities!")
+D:\lib\site-packages\flatland\envs\rail_generators.py:703: UserWarning: [WARNING] Changing to Grid mode to place at least 2 cities.
+  warnings.warn("[WARNING] Changing to Grid mode to place at least 2 cities.")
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([40])) that is different to the input size (torch.Size([40, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 2
+=====
+Episode: 3
+=====
+Episode: 4
+=====
+Episode: 5
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([62])) that is different to the input size (torch.Size([62, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 6
+=====
+Episode: 7
+=====
+Episode: 8
+=====
+Episode: 9
+=====
+Episode: 10
+=====
+Episode: 11
+=====
+Episode: 12
+=====
+Episode: 13
+=====
+Episode: 14
+=====
+Episode: 15
+=====
+Episode: 16
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([51])) that is different to the input size (torch.Size([51, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([48])) that is different to the input size (torch.Size([48, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 17
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([75])) that is different to the input size (torch.Size([75, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([65])) that is different to the input size (torch.Size([65, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 18
+=====
+Episode: 19
+=====
+Episode: 20
+=====
+Episode: 21
+=====
+Episode: 22
+=====
+Episode: 23
+=====
+Episode: 24
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([23])) that is different to the input size (torch.Size([23, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 25
+=====
+Episode: 26
+=====
+Episode: 27
+=====
+Episode: 28
+=====
+Episode: 29
+=====
+Episode: 30
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([57])) that is different to the input size (torch.Size([57, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([46])) that is different to the input size (torch.Size([46, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 31
+=====
+Episode: 32
+=====
+Episode: 33
+=====
+Episode: 34
+=====
+Episode: 35
+=====
+Episode: 36
+=====
+Episode: 37
+=====
+Episode: 38
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([30])) that is different to the input size (torch.Size([30, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([28])) that is different to the input size (torch.Size([28, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([21])) that is different to the input size (torch.Size([21, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 39
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([77])) that is different to the input size (torch.Size([77, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([34])) that is different to the input size (torch.Size([34, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 40
+=====
+Episode: 41
+=====
+Episode: 42
+=====
+Episode: 43
+=====
+Episode: 44
+=====
+Episode: 45
+=====
+Episode: 46
+=====
+Episode: 47
+=====
+Episode: 48
+=====
+Episode: 49
+=====
+Episode: 50
+=====
+Episode: 51
+=====
+Episode: 52
+=====
+Episode: 53
+=====
+Episode: 54
+=====
+Episode: 55
+=====
+Episode: 56
+=====
+Episode: 57
+=====
+Episode: 58
+=====
+Episode: 59
+=====
+Episode: 60
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([50])) that is different to the input size (torch.Size([50, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 61
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([36])) that is different to the input size (torch.Size([36, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 62
+=====
+Episode: 63
+=====
+Episode: 64
+=====
+Episode: 65
+=====
+Episode: 66
+=====
+Episode: 67
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([54])) that is different to the input size (torch.Size([54, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 68
+=====
+Episode: 69
+=====
+Episode: 70
+=====
+Episode: 71
+=====
+Episode: 72
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([31])) that is different to the input size (torch.Size([31, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([39])) that is different to the input size (torch.Size([39, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 73
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([33])) that is different to the input size (torch.Size([33, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 74
+=====
+Episode: 75
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([15])) that is different to the input size (torch.Size([15, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 76
+=====
+Episode: 77
+=====
+Episode: 78
+=====
+Episode: 79
+=====
+Episode: 80
+=====
+Episode: 81
+=====
+Episode: 82
+=====
+Episode: 83
+=====
+Episode: 84
+=====
+Episode: 85
+=====
+Episode: 86
+=====
+Episode: 87
+=====
+Episode: 88
+=====
+Episode: 89
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([13])) that is different to the input size (torch.Size([13, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([70])) that is different to the input size (torch.Size([70, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 90
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([27])) that is different to the input size (torch.Size([27, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 91
+=====
+Episode: 92
+=====
+Episode: 93
+=====
+Episode: 94
+=====
+Episode: 95
+=====
+Episode: 96
+=====
+Episode: 97
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([61])) that is different to the input size (torch.Size([61, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 98
+=====
+Episode: 99
+=====
+Episode: 100
+=====
+Episode: 101
+=====
+Episode: 102
+=====
+Episode: 103
+=====
+Episode: 104
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([41])) that is different to the input size (torch.Size([41, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 105
+=====
+Episode: 106
+=====
+Episode: 107
+=====
+Episode: 108
+=====
+Episode: 109
+=====
+Episode: 110
+=====
+Episode: 111
+=====
+Episode: 112
+=====
+Episode: 113
+=====
+Episode: 114
+=====
+Episode: 115
+=====
+Episode: 116
+====Traceback (most recent call last):
+  File "train.py", line 181, in <module>
+    next_obs, all_rewards, done, info = env.step(action_dict)
+  File "D:\lib\site-packages\flatland\envs\rail_env.py", line 590, in step
+    return self._get_observations(), self.rewards_dict, self.dones, info_dict
+  File "D:\lib\site-packages\flatland\envs\rail_env.py", line 1070, in _get_observations
+    self.obs_dict = self.obs_builder.get_many(list(range(self.get_num_agents())))
+  File "D:\lib\site-packages\flatland\envs\observations.py", line 109, in get_many
+    observations = super().get_many(handles)
+  File "D:\lib\site-packages\flatland\core\env_observation_builder.py", line 55, in get_many
+    observations[h] = self.get(h)
+  File "D:\lib\site-packages\flatland\envs\observations.py", line 241, in get
+    self._explore_branch(handle, new_cell, branch_direction, 1, 1)
+  File "D:\lib\site-packages\flatland\envs\observations.py", line 480, in _explore_branch
+    depth + 1)
+  File "D:\lib\site-packages\flatland\envs\observations.py", line 326, in _explore_branch
+    int_position = coordinate_to_position(self.env.width, [position])
+  File "D:\lib\site-packages\flatland\core\grid\grid_utils.py", line 284, in coordinate_to_position
+    position = np.empty(len(coords), dtype=int)
+KeyboardInterrupt

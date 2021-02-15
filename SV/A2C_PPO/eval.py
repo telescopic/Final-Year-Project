@@ -16,9 +16,13 @@ from utils_fast_tree_obs import FastTreeObs
 
 from actor_critic import ActorCriticAgentWithPPO
 
+from network import Network
+
 import random
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+from torch.distributions import Categorical
 from torch.autograd import Variable
 import numpy as np
 
@@ -27,15 +31,13 @@ import os
 
 import wandb
 
-wandb.init(project='flatland', name='a2c-ppo-run-10.1-5-agent')
-
 if __name__ == '__main__':
 	# Environment parameters
 	# small_v0
-	n_agents = 3
-	x_dim = 25
-	y_dim = 25
-	n_cities = 4
+	n_agents = 5
+	x_dim = 30
+	y_dim = 30
+	n_cities = 2
 	max_rails_between_cities = 2
 	max_rails_in_city = 3
 	seed = 42
@@ -113,7 +115,7 @@ if __name__ == '__main__':
 
 	### CHANGE THIS VARIABLE
 	checkpoint_steps = 20 # save model every 100 episodes
-	num_episodes = 1000
+	num_episodes = 1
 
 	hyperparams = {
 		'actor_lr': 0.005,
@@ -123,8 +125,8 @@ if __name__ == '__main__':
 		'num_updates': 30
 	}
 
-	A2C_agent = ActorCriticAgentWithPPO(
-		state_size=state_size, action_size=5, hyperparams=hyperparams)
+	A2C_agent = Network(in_dim=state_size, out_dim=5)
+	A2C_agent.load_state_dict(torch.load('actor.pth'))
 
 	rendered_frames = []
 	first_frame = None
@@ -138,25 +140,14 @@ if __name__ == '__main__':
 		cntr += 1
 
 		obs, info = env.reset(True, True)
-		#first_frame = render_env(env)
-		for agent in env.get_agent_handles():
-			if obs[agent]:
-				agent_obs[agent] = normalize_observation(
-					obs[agent],
-					observation_tree_depth,
-					observation_radius=observation_radius)
 
-		obs_list = [[] for i in range(n_agents)]
-		actions_list = [[] for i in range(n_agents)]
-		log_prob_list = [[] for i in range(n_agents)]
-		rewards_list = [[] for i in range(n_agents)]
-		tot_rewards = 0
 
 		for i in range(max_steps):
-			#render_env(env, 'Render/render'+str(i)+".png")
+			render_env(env, 'Render/render'+str(i)+".png")
 
-			if i % step_size == 0:
-				print("=", end="", flush=True)
+			# if i % step_size == 0:
+			# 	print("=", end="", flush=True)
+
 			for agent in env.get_agent_handles():
 				if obs[agent]:
 					agent_obs[agent] = normalize_observation(
@@ -165,61 +156,23 @@ if __name__ == '__main__':
 						observation_radius=observation_radius)
 				else:
 					agent_obs[agent] = None
+
 			action_dict = {}
 
 			for agent in env.get_agent_handles():
-				if not obs[agent]:
+				if agent_obs[agent] is None:
 					continue
+				else:
+					action_dict[agent] = np.random.choice([0, 1, 2, 3, 4, 5])
+					# out = F.softmax(A2C_agent(agent_obs[agent]), dim=-1)
+					# action = np.argmax(out.detach().numpy())
+					# action_dict[agent] = action
 
-				action, log_prob = A2C_agent.get_action(agent_obs[agent])
-				obs_list[agent].append(agent_obs[agent])
-				actions_list[agent].append(action)
-				log_prob_list[agent].append(log_prob)
-
-				action_dict[agent] = action
+			if agent_obs[0] is None:
+				action_dict[1] = 2
+			elif agent_obs[1] is None:
+				action_dict[0] = 2
 
 			next_obs, all_rewards, done, info = env.step(action_dict)
 
-			for agent in env.get_agent_handles():
-				if all_rewards[agent] != -1:
-					# 1 or 0
-					all_rewards[agent] *= 1000
-
-			for agent in env.get_agent_handles():
-
-				if obs[agent]:
-					tot_rewards += all_rewards[agent]
-					rewards_list[agent].append(all_rewards[agent])
-
 			obs = next_obs
-
-		avg_rewards = tot_rewards / n_agents
-		acc_rewards.append(avg_rewards)
-
-		for agent in env.get_agent_handles():
-			rewards_list[agent] = A2C_agent.compute_discounted_rewards(
-				rewards_list[agent])
-
-		#print(rewards_list)
-		tot_actor_loss = 0
-		tot_critic_loss = 0
-		for agent in env.get_agent_handles():
-			A2C_agent.learn(obs_list[agent], actions_list[agent],
-							log_prob_list[agent], rewards_list[agent])
-			tot_actor_loss += A2C_agent.avg_actor_loss
-			tot_critic_loss += A2C_agent.avg_critic_loss
-
-		wandb.log({'actor_loss': tot_actor_loss, 'critic_loss': tot_critic_loss})
-
-		if cntr == rewards_step_size:
-			wandb.log({'mean_rewards': np.mean(acc_rewards)})
-			cntr = 0
-			acc_rewards = []
-		
-		print(flush=True)
-
-	print("Actor and Critic weights saved at Checkpoint", flush=True)
-	torch.save(A2C_agent.actor.state_dict(), os.getcwd() + '/actor.pth')
-	torch.save(A2C_agent.critic.state_dict(), os.getcwd() + '/critic.pth')
-
-	#first_frame.save('render.gif', append_images=rendered_frames)

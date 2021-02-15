@@ -1,0 +1,24 @@
+{
+    "os": "Windows-10-10.0.18362-SP0",
+    "python": "3.7.6",
+    "heartbeatAt": "2021-01-18T07:53:33.287687",
+    "startedAt": "2021-01-18T07:53:30.871779",
+    "docker": null,
+    "gpu": "GeForce GTX 1650",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "codePath": "SV\\A2C_PPO\\train.py",
+    "program": "train.py",
+    "git": {
+        "remote": "git@github.com:telescopic/Final-Year-Project.git",
+        "commit": "9e1d28fb9ab15671d70f7186eebddda1a434e75b"
+    },
+    "email": "vigneshsuresh1775@gmail.com",
+    "root": "C:/Users/vigne/Desktop/Final-Year-Project",
+    "host": "LAPTOP-O8M18B67",
+    "username": "vigne",
+    "executable": "D:\\python.exe"
+}

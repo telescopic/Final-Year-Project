@@ -43,8 +43,6 @@ class ActorCriticAgentWithPPO:
 
         actions = F.softmax(self.actor(obs), dim=-1)
 
-        #dist = MultivariateNormal(actions, self.cov_mat)
-
         dist = Categorical(actions)
 
         action = dist.sample()
@@ -67,7 +65,7 @@ class ActorCriticAgentWithPPO:
     def evaluate(self, obs, actions):
         V = self.critic(obs)
 
-        acts = F.softmax(self.actor(obs))
+        acts = F.softmax(self.actor(obs), dim=-1)
         dist = Categorical(acts)
         log_probs = dist.log_prob(actions)
 
@@ -97,13 +95,11 @@ class ActorCriticAgentWithPPO:
             surr2 = torch.clamp(ratios, 1 - self.clip, 1 + self.clip) * A_k
 
             actor_loss = (-torch.min(surr1, surr2)).mean()
-            self.avg_actor_loss += actor_loss
+            self.avg_actor_loss += -actor_loss.item()
             #self.actor_loss_log.append(actor_loss)
 
-            V = V.view(-1, 1)
-
             critic_loss = nn.MSELoss()(V, batch_rewards)
-            self.avg_critic_loss += critic_loss
+            self.avg_critic_loss += critic_loss.item()
             #self.critic_loss_log.append(critic_loss)
 
             self.actor_optim.zero_grad()

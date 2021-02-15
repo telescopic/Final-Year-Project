@@ -1,0 +1,8 @@
+Using FastTreeObs
+DEPRECATED - RailEnv arg: malfunction_and_process_data - use malfunction_generator
+Training Actor-Critic from scratch!
+Episode: 0
+Traceback (most recent call last):
+  File "train.py", line 143, in <module>
+    if obs[agent]:
+ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()

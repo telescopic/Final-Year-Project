@@ -1,0 +1,33 @@
+Using StandardTreeObs
+DEPRECATED - RailEnv arg: malfunction_and_process_data - use malfunction_generator
+Training Actor-Critic from scratch!
+Episode: 0
+=========D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([341])) that is different to the input size (torch.Size([341, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 1
+=========D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([802])) that is different to the input size (torch.Size([802, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 2
+=Traceback (most recent call last):
+  File "train.py", line 181, in <module>
+    next_obs, all_rewards, done, info = env.step(action_dict)
+  File "D:\lib\site-packages\flatland\envs\rail_env.py", line 590, in step
+    return self._get_observations(), self.rewards_dict, self.dones, info_dict
+  File "D:\lib\site-packages\flatland\envs\rail_env.py", line 1070, in _get_observations
+    self.obs_dict = self.obs_builder.get_many(list(range(self.get_num_agents())))
+  File "D:\lib\site-packages\flatland\envs\observations.py", line 109, in get_many
+    observations = super().get_many(handles)
+  File "D:\lib\site-packages\flatland\core\env_observation_builder.py", line 55, in get_many
+    observations[h] = self.get(h)
+  File "D:\lib\site-packages\flatland\envs\observations.py", line 241, in get
+    self._explore_branch(handle, new_cell, branch_direction, 1, 1)
+  File "D:\lib\site-packages\flatland\envs\observations.py", line 480, in _explore_branch
+    depth + 1)
+  File "D:\lib\site-packages\flatland\envs\observations.py", line 355, in _explore_branch
+    elif int_position in np.delete(self.predicted_pos[post_step], handle, 0):
+  File "<__array_function__ internals>", line 6, in delete
+  File "C:\Users\vigne\AppData\Roaming\Python\Python37\site-packages\numpy\lib\function_base.py", line 4320, in delete
+    slobj = [slice(None)]*ndim
+KeyboardInterrupt

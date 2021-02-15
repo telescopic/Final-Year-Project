@@ -1,0 +1,38 @@
+Using StandardTreeObs
+DEPRECATED - RailEnv arg: malfunction_and_process_data - use malfunction_generator
+D:\lib\site-packages\flatland\envs\rail_generators.py:781: UserWarning: Could not set all required cities!
+  "Could not set all required cities!")
+Training Actor-Critic from scratch!
+Episode: 0
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([45])) that is different to the input size (torch.Size([45, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 1
+D:\lib\site-packages\flatland\envs\rail_generators.py:781: UserWarning: Could not set all required cities!
+  "Could not set all required cities!")
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([402])) that is different to the input size (torch.Size([402, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 2
+=====
+Episode: 3
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([37])) that is different to the input size (torch.Size([37, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 4
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([15])) that is different to the input size (torch.Size([15, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 5
+=====D:\lib\site-packages\torch\nn\modules\loss.py:443: UserWarning: Using a target size (torch.Size([44])) that is different to the input size (torch.Size([44, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  return F.mse_loss(input, target, reduction=self.reduction)
+
+Episode: 6
+=====
+Episode: 7
+=====
+Episode: 8
+=====
+Episode: 9
+=====
+Actor and Critic weights saved at Checkpoint

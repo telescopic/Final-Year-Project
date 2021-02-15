@@ -1,0 +1,11 @@
+2021-01-18 16:21:34,114 INFO    MainThread:16500 [wandb_setup.py:_flush():70] setting env: {}
+2021-01-18 16:21:34,114 INFO    MainThread:16500 [wandb_setup.py:_flush():70] multiprocessing start_methods=spawn
+2021-01-18 16:21:34,114 INFO    MainThread:16500 [wandb_setup.py:_flush():70] setting login settings: {}
+2021-01-18 16:21:34,115 INFO    MainThread:16500 [wandb_init.py:_log_setup():318] Logging user logs to C:\Users\vigne\Desktop\Final-Year-Project\SV\A2C_PPO\wandb\run-20210118_162134-15hwr1rd\logs\debug.log
+2021-01-18 16:21:34,115 INFO    MainThread:16500 [wandb_init.py:_log_setup():319] Logging internal logs to C:\Users\vigne\Desktop\Final-Year-Project\SV\A2C_PPO\wandb\run-20210118_162134-15hwr1rd\logs\debug-internal.log
+2021-01-18 16:21:38,832 INFO    MainThread:16500 [wandb_run.py:_console_start():1308] atexit reg
+2021-01-18 16:21:38,833 INFO    MainThread:16500 [wandb_run.py:_redirect():1175] redirect: SettingsConsole.WRAP
+2021-01-18 16:21:38,834 INFO    MainThread:16500 [wandb_run.py:_redirect():1206] Wrapping output streams.
+2021-01-18 16:21:38,834 INFO    MainThread:16500 [wandb_run.py:_redirect():1222] Redirects installed.
+2021-01-18 16:37:56,804 INFO    MainThread:16500 [wandb_run.py:_atexit_cleanup():1278] got exitcode: 255
+2021-01-18 16:37:56,804 INFO    MainThread:16500 [wandb_run.py:_restore():1250] restore
