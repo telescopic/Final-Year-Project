@@ -4,7 +4,7 @@ import torch as T
 from utils.replay_buffer import ReplayBuffer
 class Model():
     def __init__(self, gamma, epsilon, lr, n_actions, input_dims,
-                mem_size, batch_size, eps_min=0.01, eps_dec=5e-7, 
+                mem_size, batch_size, lam_n_step, lam_sup, eps_min=0.01, eps_dec=5e-7, 
                 replace=1000, chkpt_dir='tmp/dqn',algo=None, env_name=None ):
 
         self.gamma = gamma
@@ -22,8 +22,11 @@ class Model():
         self.action_space=[i for i in range(self.n_actions)]
         self.learn_step_counter=0
 
+        self.lam_n_step = lam_n_step
+        self.lam_sup = lam_sup
 
-        self.memory=ReplayBuffer(mem_size,input_dims,n_actions)
+        self.memory = ReplayBuffer(mem_size,input_dims,n_actions)
+        self.demo_memory = ReplayBuffer(mem_size,input_dims,n_actions)
 
         self.q_eval = DeepQNetwork(self.lr, self.n_actions, 
                                     input_dims = self.input_dims, 
@@ -55,7 +58,7 @@ class Model():
             print("REWARD", reward)
             print("NEXT STATE", next_state)
             print("DONE", done)
-            
+
     def sample_memory(self):
         state, action, reward, new_state, done=self.memory.sample_buffer(self.batch_size)
 
@@ -70,12 +73,54 @@ class Model():
     def take_action(self, obs):
         if(np.random.random() > self.epsilon):
             state = T.tensor(obs, dtype=T.float).to(self.q_eval.device)
-            _, advantage = self.q_eval.forward(state)
-            action = T.argmax(advantage).item()
+            actions = self.q_eval.forward(state)
+            action = T.argmax(actions).item()
         else:
             action = np.random.choice(self.action_space)
 
         return action 
+
+    def loss_l(self, ae, a):
+        return 0.0 if ae == a else 0.8
+
+    def demonstration(self, no_of_iterations):
+        ## load the expert agent and store it in the replay buffer
+        for i in range(no_of_iterations):
+            self.pre_learn()
+
+
+    def pre_learn(self):
+
+        if self.learn_step_counter%self.replace_target_cntr==0:
+            self.q_next.load_state_dict(self.q_eval.state_dict())
+    
+        states, actions, rewards, n_rewards,next_states, dones = self.sample_memory_demo()
+        indices = np.arange(self.batch_size)
+
+        q_pred = self.q_eval.forward(states.float())[indices, actions.cpu().numpy()]
+        q_next = self.q_next.forward(next_states.float())
+        q_eval=self.q_eval.forward(next_states.float())
+
+        max_action = T.argmax(q_eval, dim=1)
+
+        q_next[dones] = 0.0
+        q_target = rewards + self.gamma*q_next[indices, max_action]
+
+        q_loss = self.q_eval.loss(q_target, q_pred).to(self.q_eval.device)
+        n_step_loss = self.q_eval.loss(q_target, n_rewards).to(self.q_eval.device)
+        
+        supervised_learning_loss = 0.0
+        for i in range(self.batch_size):
+            ae = actions.cpu().numpy()[i]    
+            max_value = float("-inf")
+            for a in self.action_space:
+                max_value = T.max(q_next[i][a] + self.loss_l(ae, a), max_value)
+            supervised_learning_loss += dones[i] * (max_value - q_next[i][ae])
+
+        self.q_eval.optimizer.zero_grad()
+        loss = q_loss + self.lam_n_step*n_step_loss + self.lam_sup*supervised_learning_loss
+        loss.to(self.q_eval.device)
+        loss.backward()
 
     def learn(self):
         if self.memory.mem_cntr < self.batch_size:
@@ -88,27 +133,12 @@ class Model():
         states, actions, rewards, next_states, dones = self.sample_memory()
         #print(states)
         indices = np.arange(self.batch_size)
-        #print("STATE Q_EVAL",self.q_eval.forward(states.float()))
 
-        q_pred = self.q_eval.forward(states.float())
-        #print(q_pred[1])
-        q_pred_V = q_pred[0]
-        q_pred_A = q_pred[1]
+        q_pred = self.q_eval.forward(states.float())[indices, actions.cpu().numpy()]
+        q_next = self.q_next.forward(next_states.float())
+        q_eval = self.q_eval.forward(next_states.float())
 
-        q_next= self.q_next.forward(next_states.float())
-        q_next_V = q_next[0]
-        q_next_A = q_next[1]
-
-        q_eval= self.q_eval.forward(next_states.float())
-        q_eval_V = q_eval[0]
-        q_eval_A = q_eval[1]
-        
-        #print("q_pred_V",q_pred_V, "q_pred_A",q_pred_A, "q_next_V",q_next_V, "q_next_A",q_next_A, "q_eval_V",q_eval_V, "q_eval_A",q_eval_A)
         #print("PRED",q_pred, "EVAL",q_eval, "NEXT",q_next)
-        #print("Q_PRED_A",q_pred_A.mean())
-        q_pred = T.add(q_pred_V, (q_pred_A - q_pred_A.mean(dim = 1, keepdim=True)))[indices, actions.cpu().numpy()]
-        q_next = T.add(q_next_V, (q_next_A - q_next_A.mean()))
-        q_eval = T.add(q_eval_V, (q_eval_A - q_eval_A.mean()))
 
         max_action = T.argmax(q_eval, dim=1)
         #print(dones)
