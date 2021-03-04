@@ -67,12 +67,11 @@ max_rails_between_cities = 2
 
 ## BEGIN INSTANTIATE MODELS ##
 
-agent = Model(gamma=0.99,epsilon=1.0,lr=1e-4,
-                    n_actions=action_size, 
-                    input_dims=[state_size], mem_size=25000,
-                    eps_min=0.06, batch_size=32, replace=1000, eps_dec=1e-5,
-                    chkpt_dir='model/', algo='DoubleDQNAgent', 
-                    env_name='Flatland')
+agent = Model(gamma=0.99,epsilon=1.0,lr=1e-4, n_actions=action_size, 
+                input_dims=[state_size], mem_size=25000, expert_mem_size=150000,
+                eps_min=0.06, batch_size=32, n_step=10, lam_n_step=1, lam_sup=1, lam_L2=1e-5, replace=1000, eps_dec=1e-5,
+                chkpt_dir='model/', algo='DoubleDQNAgent', 
+                env_name='Flatland')
 
 ## END INSTANTIATE MODELS ##
 
@@ -111,62 +110,65 @@ losses = []
 env_count = 0
 best_reward = -np.inf
 
-agent.demonstration()
+agent.demonstration(no_of_iterations=100000)
+agent.save_model()
+print("DONE")
+# for episode_count in range(n_episodes):
+#     # print("EPISODE: ",episode_count)
 
-for episode_count in range(n_episodes):
-    # print("EPISODE: ",episode_count)
+#     env_params = get_env(env_count)
+#     env = RailEnv(
+#         width=env_params['x_dim'],
+#         height=env_params['y_dim'],
+#         rail_generator=sparse_rail_generator(
+#         max_num_cities=env_params['n_cities'],
+#         grid_mode=False,
+#         max_rails_between_cities=max_rails_between_cities,
+#         max_rails_in_city=env_params['max_rails_in_city']
+#         ),
+#         schedule_generator=sparse_schedule_generator(speed_profiles),
+#         number_of_agents=env_params['n_agents'],
+#         malfunction_generator_and_process_data=malfunction_from_params(malfunction_parameters),
+#         obs_builder_object=tree_observation,
+#         random_seed=42
+#     )
+#     env_count += 1
 
-    env_params = get_env(env_count)
-    env = RailEnv(
-        width=env_params['x_dim'],
-        height=env_params['y_dim'],
-        rail_generator=sparse_rail_generator(
-        max_num_cities=env_params['n_cities'],
-        grid_mode=False,
-        max_rails_between_cities=max_rails_between_cities,
-        max_rails_in_city=env_params['max_rails_in_city']
-        ),
-        schedule_generator=sparse_schedule_generator(speed_profiles),
-        number_of_agents=env_params['n_agents'],
-        malfunction_generator_and_process_data=malfunction_from_params(malfunction_parameters),
-        obs_builder_object=tree_observation,
-        random_seed=42
-    )
-    env_count += 1
+#     obs,info=env.reset(True,True)
 
-    obs,info=env.reset(True,True)
-
-    max_steps = int(4 * 2 * (env.height + env.width + (env_params['n_agents'] / env_params['n_cities'])))
-    score = 0
-    for step in range(max_steps):
+#     max_steps = int(4 * 2 * (env.height + env.width + (env_params['n_agents'] / env_params['n_cities'])))
+#     score = 0
+#     for step in range(max_steps):
         
-        actions = get_actions(obs, env_params['n_agents'], info)
-        next_obs,all_rewards,done,info=env.step(actions)
-        # print(list(all_rewards.values()))
-        list_all_actions = list(actions.values())
-        list_all_rewards = list(all_rewards.values())
-        list_all_dones = list(done.values())
-        list_all_dones.pop(-1)
+#         actions = get_actions(obs, env_params['n_agents'], info)
+#         print("ACTIONS:", actions)
+#         next_obs,all_rewards,done,info=env.step(actions)
 
-        score += np.mean(list_all_rewards)
-        norm_old_obs = normalized_obs(obs)
-        norm_new_obs = normalized_obs(next_obs)
+#         # print(list(all_rewards.values()))
+#         list_all_actions = list(actions.values())
+#         list_all_rewards = list(all_rewards.values())
+#         list_all_dones = list(done.values())
+#         list_all_dones.pop(-1)
 
-        agent.store_transitions(norm_old_obs, list_all_actions, list_all_rewards, norm_new_obs, list_all_dones)
-        loss = agent.learn()
-        losses.append(loss)
-        obs = next_obs
+#         score += np.mean(list_all_rewards)
+#         norm_old_obs = normalized_obs(obs)
+#         norm_new_obs = normalized_obs(next_obs)
 
-        if done['__all__']:
-            break
-    scores.append(score)
-    avg_score = np.mean(scores[-100:])
-    avg_loss = np.mean(losses[-100:])
-    print("Episode", episode_count, "Avg Reward:", avg_score, "Avg Loss:", avg_loss)
-    # wandb.log({"Mean Reward": avg_score})
+#         agent.store_transitions(norm_old_obs, list_all_actions, list_all_rewards, norm_new_obs, list_all_dones)
+#         loss = agent.learn()
+#         losses.append(loss)
+#         obs = next_obs
 
-    if(avg_score > best_reward):
-      best_reward = avg_score
-      agent.save_model()
+#         if done['__all__']:
+#             break
+#     scores.append(score)
+#     avg_score = np.mean(scores[-100:])
+#     avg_loss = np.mean(losses[-100:])
+#     print("Episode", episode_count, "Avg Reward:", avg_score, "Avg Loss:", avg_loss)
+#     # wandb.log({"Mean Reward": avg_score})
+
+#     if(avg_score > best_reward):
+#       best_reward = avg_score
+#       agent.save_model()
 
         

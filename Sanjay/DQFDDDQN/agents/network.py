@@ -6,7 +6,7 @@ import torch.optim as optim
 import numpy as np
 
 class DeepQNetwork(nn.Module):
-    def __init__(self, lr, n_actions, input_dims, model_name, model_dir):
+    def __init__(self, lr, lam_L2, n_actions, input_dims, model_name, model_dir):
         super(DeepQNetwork, self).__init__()
         self.model_dir = model_dir
         self.model_file = os.path.join(self.model_dir, model_name)
@@ -17,7 +17,7 @@ class DeepQNetwork(nn.Module):
         self.fc3 = nn.Linear(256,256)
         self.fc4 = nn.Linear(256,n_actions)
 
-        self.optimizer = optim.Adam(self.parameters(), lr = lr)
+        self.optimizer = optim.Adam(self.parameters(), lr = lr, weight_decay=lam_L2)
         self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
         self.loss = nn.MSELoss()
         self.to(self.device)
