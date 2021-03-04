@@ -1,37 +1,113 @@
-import os
+'''
+I did experiments in an early submission. Please note that the epsilon can have an
+effects on the evaluation outcome :
+DDDQNPolicy experiments - EPSILON impact analysis
+----------------------------------------------------------------------------------------
+checkpoint = "./checkpoints/201124171810-7800.pth"  # Training on AGENTS=10 with Depth=2
+EPSILON = 0.000 # Sum Normalized Reward :  0.000000000000000 (primary score)
+EPSILON = 0.002 # Sum Normalized Reward : 18.445875081269286 (primary score)
+EPSILON = 0.005 # Sum Normalized Reward : 18.371733625865854 (primary score)
+EPSILON = 0.010 # Sum Normalized Reward : 18.249244799876152 (primary score)
+EPSILON = 0.020 # Sum Normalized Reward : 17.526987022691376 (primary score)
+EPSILON = 0.030 # Sum Normalized Reward : 16.796885571003942 (primary score)
+EPSILON = 0.040 # Sum Normalized Reward : 17.280787151431426 (primary score)
+EPSILON = 0.050 # Sum Normalized Reward : 16.256945636647025 (primary score)
+EPSILON = 0.100 # Sum Normalized Reward : 14.828347241759966 (primary score)
+EPSILON = 0.200 # Sum Normalized Reward : 11.192330074898457 (primary score)
+EPSILON = 0.300 # Sum Normalized Reward : 14.523067754608782 (primary score)
+EPSILON = 0.400 # Sum Normalized Reward : 12.901508220410834 (primary score)
+EPSILON = 0.500 # Sum Normalized Reward :  3.754660231871272 (primary score)
+EPSILON = 1.000 # Sum Normalized Reward :  1.397180159192391 (primary score)
+'''
+
 import sys
+import time
 from argparse import Namespace
 from pathlib import Path
 
 import numpy as np
-import time
-
-import torch
 from flatland.core.env_observation_builder import DummyObservationBuilder
+from flatland.envs.agent_utils import RailAgentStatus
 from flatland.envs.observations import TreeObsForRailEnv
-from flatland.evaluators.client import FlatlandRemoteClient
 from flatland.envs.predictions import ShortestPathPredictorForRailEnv
+from flatland.evaluators.client import FlatlandRemoteClient
 from flatland.evaluators.client import TimeoutException
 
+from reinforcement_learning.dddqn_policy import DDDQNPolicy
+from reinforcement_learning.deadlockavoidance_with_decision_agent import DeadLockAvoidanceWithDecisionAgent
+from reinforcement_learning.multi_decision_agent import MultiDecisionAgent
+from reinforcement_learning.ppo_agent import PPOPolicy
+from utils.agent_action_config import get_action_size, map_actions, set_action_size_reduced, set_action_size_full
+from utils.dead_lock_avoidance_agent import DeadLockAvoidanceAgent
 from utils.deadlock_check import check_if_all_blocked
+from utils.fast_tree_obs import FastTreeObs
+from utils.observation_utils import normalize_observation
 
 base_dir = Path(__file__).resolve().parent.parent
 sys.path.append(str(base_dir))
 
-from reinforcement_learning.dddqn_policy import DDDQNPolicy
-from utils.observation_utils import normalize_observation
-
 ####################################################
 # EVALUATION PARAMETERS
+set_action_size_full()
 
 # Print per-step logs
 VERBOSE = True
+USE_FAST_TREEOBS = True
 
-# Checkpoint to use (remember to push it!)
-checkpoint = "checkpoints/sample-checkpoint.pth"
+if False:
+    # -------------------------------------------------------------------------------------------------------
+    # RL solution
+    # -------------------------------------------------------------------------------------------------------
+    # 116591 adrian_egli
+    # graded	71.305	0.633	RL	Successfully Graded ! More details about this submission can be found at:
+    # http://gitlab.aicrowd.com/adrian_egli/neurips2020-flatland-starter-kit/issues/51
+    # Fri, 22 Jan 2021 23:37:56
+    set_action_size_reduced()
+    load_policy = "DDDQN"
+    checkpoint = "./checkpoints/210122120236-3000.pth"  # 17.011131341978228
+    EPSILON = 0.0
+
+if False:
+    # -------------------------------------------------------------------------------------------------------
+    # RL solution
+    # -------------------------------------------------------------------------------------------------------
+    # 116658 adrian_egli
+    # graded	73.821	0.655	RL	Successfully Graded ! More details about this submission can be found at:
+    # http://gitlab.aicrowd.com/adrian_egli/neurips2020-flatland-starter-kit/issues/52
+    # Sat, 23 Jan 2021 07:41:35
+    set_action_size_reduced()
+    load_policy = "PPO"
+    checkpoint = "./checkpoints/210122235754-5000.pth"  # 16.00113400887389
+    EPSILON = 0.0
+
+if True:
+    # -------------------------------------------------------------------------------------------------------
+    # RL solution
+    # -------------------------------------------------------------------------------------------------------
+    # 116659 adrian_egli
+    # graded	80.579	0.715	RL	Successfully Graded ! More details about this submission can be found at:
+    # http://gitlab.aicrowd.com/adrian_egli/neurips2020-flatland-starter-kit/issues/53
+    # Sat, 23 Jan 2021 07:45:49
+    set_action_size_reduced()
+    load_policy = "DDDQN"
+    checkpoint = "./checkpoints/210122165109-5000.pth"  # 17.993750197899438
+    EPSILON = 0.0
+
+if False:
+    # -------------------------------------------------------------------------------------------------------
+    # !! This is not a RL solution !!!!
+    # -------------------------------------------------------------------------------------------------------
+    # 116727 adrian_egli
+    # graded	106.786	0.768	RL	Successfully Graded ! More details about this submission can be found at:
+    # http://gitlab.aicrowd.com/adrian_egli/neurips2020-flatland-starter-kit/issues/54
+    # Sat, 23 Jan 2021 14:31:50
+    set_action_size_reduced()
+    load_policy = "DeadLockAvoidance"
+    checkpoint = None
+    EPSILON = 0.0
 
 # Use last action cache
-USE_ACTION_CACHE = True
+USE_ACTION_CACHE = False
 
 # Observation parameters (must match training parameters!)
 observation_tree_depth = 2
@@ -44,20 +120,31 @@ remote_client = FlatlandRemoteClient()
 
 # Observation builder
 predictor = ShortestPathPredictorForRailEnv(observation_max_path_depth)
-tree_observation = TreeObsForRailEnv(max_depth=observation_tree_depth, predictor=predictor)
+if USE_FAST_TREEOBS:
+    def check_is_observation_valid(observation):
+        return True
 
-# Calculates state and action sizes
-n_nodes = sum([np.power(4, i) for i in range(observation_tree_depth + 1)])
-state_size = tree_observation.observation_dim * n_nodes
-action_size = 5
 
-# Creates the policy. No GPU on evaluation server.
-policy = DDDQNPolicy(state_size, action_size, Namespace(**{'use_gpu': False}), evaluation_mode=True)
+    def get_normalized_observation(observation, tree_depth: int, observation_radius=0):
+        return observation
 
-if os.path.isfile(checkpoint):
-    policy.qnetwork_local = torch.load(checkpoint)
+
+    tree_observation = FastTreeObs(max_depth=observation_tree_depth)
+    state_size = tree_observation.observation_dim
 else:
-    print("Checkpoint not found, using untrained policy! (path: {})".format(checkpoint))
+    def check_is_observation_valid(observation):
+        return observation
+
+
+    def get_normalized_observation(observation, tree_depth: int, observation_radius=0):
+        return normalize_observation(observation, tree_depth, observation_radius)
+
+
+    tree_observation = TreeObsForRailEnv(max_depth=observation_tree_depth, predictor=predictor)
+    # Calculate the state size given the depth of the tree observation and the number of features
+    n_features_per_node = tree_observation.observation_dim
+    n_nodes = sum([np.power(4, i) for i in range(observation_tree_depth + 1)])
+    state_size = n_features_per_node * n_nodes
 
 #####################################################################
 # Main evaluation loop
@@ -92,6 +179,27 @@ while True:
 
     tree_observation.set_env(local_env)
     tree_observation.reset()
+
+    # Creates the policy. No GPU on evaluation server.
+    if load_policy == "DDDQN":
+        policy = DDDQNPolicy(state_size, get_action_size(), Namespace(**{'use_gpu': False}), evaluation_mode=True)
+    elif load_policy == "PPO":
+        policy = PPOPolicy(state_size, get_action_size())
+    elif load_policy == "DeadLockAvoidance":
+        policy = DeadLockAvoidanceAgent(local_env, get_action_size(), enable_eps=False)
+    elif load_policy == "DeadLockAvoidanceWithDecision":
+        # inter_policy = PPOPolicy(state_size, get_action_size(), use_replay_buffer=False, in_parameters=train_params)
+        inter_policy = DDDQNPolicy(state_size, get_action_size(), Namespace(**{'use_gpu': False}), evaluation_mode=True)
+        policy = DeadLockAvoidanceWithDecisionAgent(local_env, state_size, get_action_size(), inter_policy)
+    elif load_policy == "MultiDecision":
+        policy = MultiDecisionAgent(state_size, get_action_size(), Namespace(**{'use_gpu': False}))
+    else:
+        policy = PPOPolicy(state_size, get_action_size(), use_replay_buffer=False,
+                           in_parameters=Namespace(**{'use_gpu': False}))
+
+    policy.load(checkpoint)
+
+    policy.reset(local_env)
     observation = tree_observation.get_many(list(range(nb_agents)))
 
     print("Evaluation {}: {} agents in {}x{}".format(evaluation_number, nb_agents, local_env.width, local_env.height))
@@ -111,6 +219,7 @@ while True:
     agent_last_action = {}
     nb_hit = 0
 
+    policy.start_episode(train=False)
     while True:
         try:
             #####################################################################
@@ -123,27 +232,33 @@ while True:
             if not check_if_all_blocked(env=local_env):
                 time_start = time.time()
                 action_dict = {}
-                for agent in range(nb_agents):
-                    if observation[agent] and info['action_required'][agent]:
-                        if agent in agent_last_obs and np.all(agent_last_obs[agent] == observation[agent]):
+                policy.start_step(train=False)
+                for agent_handle in range(nb_agents):
+                    if info['action_required'][agent_handle]:
+                        if agent_handle in agent_last_obs and np.all(
+                                agent_last_obs[agent_handle] == observation[agent_handle]):
                             # cache hit
-                            action = agent_last_action[agent]
+                            action = agent_last_action[agent_handle]
                             nb_hit += 1
                         else:
-                            # otherwise, run normalization and inference
-                            norm_obs = normalize_observation(observation[agent], tree_depth=observation_tree_depth, observation_radius=observation_radius)
-                            action = policy.act(norm_obs, eps=0.0)
+                            normalized_observation = get_normalized_observation(observation[agent_handle],
+                                                                                observation_tree_depth,
+                                                                                observation_radius=observation_radius)
 
-                        action_dict[agent] = action
+                            action = policy.act(agent_handle, normalized_observation, eps=EPSILON)
 
-                        if USE_ACTION_CACHE:
-                            agent_last_obs[agent] = observation[agent]
-                            agent_last_action[agent] = action
+                    action_dict[agent_handle] = action
+
+                    if USE_ACTION_CACHE:
+                        agent_last_obs[agent_handle] = observation[agent_handle]
+                        agent_last_action[agent_handle] = action
+
+                policy.end_step(train=False)
                 agent_time = time.time() - time_start
                 time_taken_by_controller.append(agent_time)
 
                 time_start = time.time()
-                _, all_rewards, done, info = remote_client.env_step(action_dict)
+                _, all_rewards, done, info = remote_client.env_step(map_actions(action_dict))
                 step_time = time.time() - time_start
                 time_taken_per_step.append(step_time)
 
@@ -160,19 +275,24 @@ while True:
                 step_time = time.time() - time_start
                 time_taken_per_step.append(step_time)
 
-            nb_agents_done = sum(done[idx] for idx in local_env.get_agent_handles())
+            nb_agents_done = 0
+            for i_agent, agent in enumerate(local_env.agents):
+                # manage the boolean flag to check if all agents are indeed done (or done_removed)
+                if (agent.status in [RailAgentStatus.DONE, RailAgentStatus.DONE_REMOVED]):
+                    nb_agents_done += 1
 
             if VERBOSE or done['__all__']:
-                print("Step {}/{}\tAgents done: {}\t Obs time {:.3f}s\t Inference time {:.5f}s\t Step time {:.3f}s\t Cache hits {}\t No-ops? {}".format(
-                    str(steps).zfill(4),
-                    max_nb_steps,
-                    nb_agents_done,
-                    obs_time,
-                    agent_time,
-                    step_time,
-                    nb_hit,
-                    no_ops_mode
-                ), end="\r")
+                print(
+                    "Step {}/{}\tAgents done: {}\t Obs time {:.3f}s\t Inference time {:.5f}s\t Step time {:.3f}s\t Cache hits {}\t No-ops? {}".format(
+                        str(steps).zfill(4),
+                        max_nb_steps,
+                        nb_agents_done,
+                        obs_time,
+                        agent_time,
+                        step_time,
+                        nb_hit,
+                        no_ops_mode
+                    ), end="\r")
 
             if done['__all__']:
                 # When done['__all__'] == True, then the evaluation of this
@@ -188,9 +308,12 @@ while True:
             print("Timeout! Will skip this episode and go to the next.", err)
             break
 
+    policy.end_episode(train=False)
+
     np_time_taken_by_controller = np.array(time_taken_by_controller)
     np_time_taken_per_step = np.array(time_taken_per_step)
-    print("Mean/Std of Time taken by Controller : ", np_time_taken_by_controller.mean(), np_time_taken_by_controller.std())
+    print("Mean/Std of Time taken by Controller : ", np_time_taken_by_controller.mean(),
+          np_time_taken_by_controller.std())
     print("Mean/Std of Time per Step : ", np_time_taken_per_step.mean(), np_time_taken_per_step.std())
     print("=" * 100)
 
