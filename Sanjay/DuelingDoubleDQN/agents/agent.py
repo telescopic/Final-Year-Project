@@ -55,6 +55,7 @@ class Model():
             print("REWARD", reward)
             print("NEXT STATE", next_state)
             print("DONE", done)
+            
     def sample_memory(self):
         state, action, reward, new_state, done=self.memory.sample_buffer(self.batch_size)
 

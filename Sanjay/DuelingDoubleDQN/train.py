@@ -139,6 +139,7 @@ for episode_count in range(n_episodes):
     for step in range(max_steps):
         
         actions = get_actions(obs, env_params['n_agents'], info)
+        print("ACTIONS:",actions)
         next_obs,all_rewards,done,info=env.step(actions)
         # print(list(all_rewards.values()))
         list_all_actions = list(actions.values())
