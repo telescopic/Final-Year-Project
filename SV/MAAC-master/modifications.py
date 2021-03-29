@@ -12,7 +12,7 @@ from flatland.envs.malfunction_generators import malfunction_from_params, Malfun
 from flatland.envs.predictions import ShortestPathPredictorForRailEnv
 
 from utils_observation_utils import normalize_observation
-from utils_fast_tree_obs import FastTreeObs
+#from utils_fast_tree_obs import FastTreeObs
 
 import random
 import torch
