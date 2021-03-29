@@ -26,16 +26,109 @@ from utils.buffer import ReplayBuffer
 from algorithms.attention_sac import AttentionSAC
 
 import wandb
-wandb.init(project='flatland', name='maac-run-4.0-fast-tree-obs')
+wandb.init(project='flatland', name='maac-run-6.0-gcp')
 
-if __name__ == '__main__':
+## envs
+env_params = [
+        {
+            # Test_0
+            "n_agents": 1,
+            "x_dim": 25,
+            "y_dim": 25,
+            "n_cities": 2,
+            "max_rails_between_cities": 2,
+            "max_rails_in_city": 3,
+            "malfunction_rate": 1 / 50,
+            "seed": 0
+        },
+        {
+            # Test_0
+            "n_agents": 2,
+            "x_dim": 25,
+            "y_dim": 25,
+            "n_cities": 2,
+            "max_rails_between_cities": 2,
+            "max_rails_in_city": 3,
+            "malfunction_rate": 1 / 50,
+            "seed": 0
+        },
+        {
+            # Test_0
+            "n_agents": 3,
+            "x_dim": 25,
+            "y_dim": 25,
+            "n_cities": 2,
+            "max_rails_between_cities": 2,
+            "max_rails_in_city": 3,
+            "malfunction_rate": 1 / 50,
+            "seed": 0
+        },
+        {
+            # Test_0
+            "n_agents": 4,
+            "x_dim": 25,
+            "y_dim": 25,
+            "n_cities": 2,
+            "max_rails_between_cities": 2,
+            "max_rails_in_city": 3,
+            "malfunction_rate": 1 / 50,
+            "seed": 0
+        },
+        {
+            # Test_1
+            "n_agents": 5,
+            "x_dim": 25,
+            "y_dim": 25,
+            "n_cities": 2,
+            "max_rails_between_cities": 2,
+            "max_rails_in_city": 3,
+            "malfunction_rate": 1 / 50,
+            "seed": 0
+        },
+        {
+            # Test_2
+            "n_agents": 10,
+            "x_dim": 30,
+            "y_dim": 30,
+            "n_cities": 2,
+            "max_rails_between_cities": 2,
+            "max_rails_in_city": 3,
+            "malfunction_rate": 1 / 100,
+            "seed": 0
+        },
+        {
+            # Test_3
+            "n_agents": 20,
+            "x_dim": 35,
+            "y_dim": 35,
+            "n_cities": 3,
+            "max_rails_between_cities": 2,
+            "max_rails_in_city": 3,
+            "malfunction_rate": 1 / 200,
+            "seed": 0
+        },
+        {
+            # Test_3
+            "n_agents": 58,
+            "x_dim": 40,
+            "y_dim": 40,
+            "n_cities": 5,
+            "max_rails_between_cities": 2,
+            "max_rails_in_city": 3,
+            "malfunction_rate": 1 / 200,
+            "seed": 0
+        },
+    ]
+##
+
+def train(env):
 	n_agents = 5
 	x_dim = 50
 	y_dim = 50
 	n_cities = 4
 	max_rails_between_cities = 2
 	max_rails_in_city = 3
-	seed = 42
+	seed = 0
 	use_fast_tree_obs = False
 
 	# Observation parameters
@@ -120,7 +213,7 @@ if __name__ == '__main__':
 	agent_obs = np.array([None] * env.get_num_agents())
 
 	max_steps = int(4 * 2 * (env.height + env.width + (n_agents / n_cities)))
-	num_episodes = 1000000
+	num_episodes = 1
 
 	agent_init_params = []
 	sa_size = []
@@ -255,4 +348,9 @@ if __name__ == '__main__':
 			cur_time = time.time()
 			time_elapsed = (cur_time - start_time)//60
 			print("Time Elapsed: " + str(time_elapsed) + "\n")
-		
+
+if __name__ == '__main__':
+	for env in env_params:
+		print("Using env:")
+		print(env)
+		train(env)
