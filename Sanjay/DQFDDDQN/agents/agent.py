@@ -7,6 +7,7 @@ from utils.demo_replay_buffer import DemoReplayBuffer
 import pandas as pd
 import pickle 
 import ast
+from tqdm import tqdm
 
 class Model():
     def __init__(self, gamma, epsilon, lr, n_actions, input_dims,
@@ -83,16 +84,21 @@ class Model():
         return states, actions, rewards, new_states, dones
 
     def sample_memory_demo(self):
-        state, action, reward, n_reward,new_state, done=self.demo_memory.sample_buffer(self.batch_size)
+        state, action, reward, n_reward, new_state, done=self.demo_memory.sample_buffer(self.batch_size)
 
         states = T.tensor(state).to(self.q_eval.device)
         actions = T.tensor(action).to(self.q_eval.device)
         rewards = T.tensor(reward).to(self.q_eval.device)
         n_rewards = T.tensor(n_reward).to(self.q_eval.device)
-        new_states = T.tensor(new_state).to(self.q_eval.device)
-        dones = T.tensor(done).to(self.q_eval.device)
+        #print("NEW STATE LEN",len(new_state[0]))
+        try:
+            new_states = T.tensor(new_state).to(self.q_eval.device)
+            dones = T.tensor(done).to(self.q_eval.device)
 
-        return states, actions, rewards, n_rewards, new_states, dones
+            return states, actions, rewards, n_rewards, new_states, dones
+        except:
+            print("NEW STATE",new_state)
+            print("DONE",done)
 
     def take_action(self, obs):
         if(np.random.random() > self.epsilon):
@@ -250,7 +256,7 @@ class Model():
 
                                 n_step_reward = T.tensor(sum(n_reward_dict[agent_id]), dtype=T.float32)
 
-                                if curr_row[6] == "None":
+                                if expert_agent[i][6] == "None":
                                     self.store_transitions_demo(expert_agent[i][2], expert_agent[i][3], expert_agent[i][4], n_step_reward, [0]*231, expert_agent[i][7])
                                 else:
                                     self.store_transitions_demo(expert_agent[i][2], expert_agent[i][3], expert_agent[i][4], n_step_reward, expert_agent[i][6], expert_agent[i][7])
@@ -286,7 +292,7 @@ class Model():
         # with open("demo_memory.pkl","rb") as output:
         #     pickle.dump(self.demo_memory, output, -1)
         print("[LOG] Starting pre training ")
-        for i in range(no_of_iterations):
+        for i in tqdm(range(no_of_iterations)):
             self.pre_learn() 
 
     def pre_learn(self):
@@ -294,8 +300,8 @@ class Model():
         if self.learn_step_counter%self.replace_target_cntr==0:
             self.q_next.load_state_dict(self.q_eval.state_dict())
     
-        states, actions, rewards, n_rewards,next_states, dones = self.sample_memory_demo()
-        print(next_states)
+        states, actions, rewards, n_rewards, next_states, dones = self.sample_memory_demo()
+        # print(len(next_states))
         indices = np.arange(self.batch_size)
 
         q_pred = self.q_eval.forward(states.float())[indices, actions.cpu().numpy()]
@@ -320,13 +326,13 @@ class Model():
             supervised_learning_loss += dones[i] * (max_value - q_next[i][ae])
 
         self.q_eval.optimizer.zero_grad()
-        print(q_loss.dtype, n_step_loss.dtype, supervised_learning_loss.dtype)
-        loss = q_loss + self.lam_n_step*n_step_loss + self.lam_sup*supervised_learning_loss
-        print(loss)
+        #print(q_loss.dtype, n_step_loss.dtype, supervised_learning_loss.dtype)
+        loss = 0.5*q_loss + self.lam_n_step*n_step_loss + self.lam_sup*supervised_learning_loss
+        #print(loss)
         loss.to(self.q_eval.device)
         # print(loss.double().dtype)
         loss.backward()
-        print("backwards doen")
+        #print("backwards doen")
     def learn(self):
         if self.memory.mem_cntr < self.batch_size:
             #print("SKIPPING")
