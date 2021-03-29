@@ -213,7 +213,7 @@ def train(env):
 	agent_obs = np.array([None] * env.get_num_agents())
 
 	max_steps = int(4 * 2 * (env.height + env.width + (n_agents / n_cities)))
-	num_episodes = 1
+	num_episodes = 100000
 
 	agent_init_params = []
 	sa_size = []
